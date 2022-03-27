@@ -22,8 +22,25 @@ def power2(base, exp):
         exp >>= 1
         base *= base
     return ans
+    
+def power_mod(x:int, pow:int, mod:int):
+    assert type(x) is int
+    assert type(pow) is int and pow >= 0
+    assert type(mod) is int
+    res = 1
+    pow_res = 0
+    while pow_res < pow:
+        pow_res_1 = 2
+        res1 = x
+        while pow_res + pow_res_1 <= pow:
+            res1 = (res1 * res1) % mod
+            pow_res_1 *= 2
+        pow_res_1 //= 2
+        res = (res * res1) % mod
+        pow_res += pow_res_1
+    return res % mod
 
-def power3(a, b):
+def power3(a, b, n):
     x = 0
 
     if (b == 0):
