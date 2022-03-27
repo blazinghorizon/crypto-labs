@@ -7,7 +7,7 @@ import utils
 def generate_p_q():
     p = 0
     q = 0
-    n = 16
+    n = 100
 
     while True:
         p = utils.getLowLevelPrime(n)
@@ -42,7 +42,7 @@ while True:
     else:
         e += 1
 
-print(utils.power3(105, 250))
+#print(utils.power3(2,3))
 
 _n = p*q
 d = utils.modInverse2(e, phi)
@@ -58,7 +58,7 @@ c = utils.power(msg, e) % _n
 
 print("\nEncrypted data = ", c)
 
-m = utils.power3(c, d) % _n
+m = utils.power_mod(c, d, _n)
 
 print("\nOriginal Message Sent = ", m)
 
