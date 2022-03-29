@@ -1,94 +1,51 @@
 # 1.2 lab
 
-from turtle import xcor
 import numpy
 import utils
 
-def generate_p_q():
-    p = 0
-    q = 0
-    n = 100
-
-    while True:
-        p = utils.getLowLevelPrime(n)
-        if not utils.isMillerRabinPassed(p):
-            continue
-        else:
-           # print(n, "bit prime is: \n", p)
-            break
-
-    while True:
-        q = utils.getLowLevelPrime(n)
-        if not utils.isMillerRabinPassed(q):
-            continue
-        else:
-         #   print(n, "bit prime is: \n", q)
-            break
-
-    return p, q
-
-#print(utils.power(2, 20))
-#print(utils.modInverse(3, 26))
-#print(utils.modInverse2(3, 26))
-
-e = int(input('input e'))
+BITS = 128
 
 while True:
-    p, q = generate_p_q()
-    phi = (p-1)*(q-1)
+    try:
+        e = int(input('e: '))
+    except:
+        print('invalid input, try again...')
+    else:
+        print('Calculating...')
+        break
+
+# get p, q and phi
+while True:
+    p, q = utils.generatePQ(BITS)
+    phi = (p - 1)*(q - 1)
 
     if utils.gcd(e, phi) == 1:
         break
     else:
         e += 1
 
-#print(utils.power3(2,3))
+# get n
+n = p * q
+# get d using Euclid Algorithm
+d = utils.gcdExtended(e, phi)
 
-_n = p*q
-d = utils.modInverse2(e, phi)
-print(f'E = {e}, p = {p}, q = {q}, phi = {phi}, n = {_n}, d = {d}\n')
+# output calculated parameters
+print(f'E = {e}\np = {p}\nq = {q}\nphi = {phi}\nn = {n}\nd = {d}\n')
+#print(f'open key - ({e}, {n})\nclosed key - ({d}, {n})')
 
-print(f'open key - ({e}, {_n}), closed key - ({d}, {_n})')
-
-msg = 20
-
-print("Message data = ", msg)
-
-c = utils.power(msg, e) % _n
-
-print("\nEncrypted data = ", c)
-
-m = utils.power_mod(c, d, _n)
-
-print("\nOriginal Message Sent = ", m)
-
-
-'''
+# encrypt and decrypt message
 while True:
-        n = 1024
-        p = utils.getLowLevelPrime(n)
-        print('p')
-        q = utils.getLowLevelPrime(n)
-        print(utils.isMillerRabinPassed(p))
-        print(utils.isMillerRabinPassed(q))
+    try:
+        msg = int(input('Input the message: '))
+    except:
+        print('invalid input, try again...')
+    else:
         break
-       # if not utils.isMillerRabinPassed(p):
-          #  continue
-      #  if not utils.isMillerRabinPassed(q):
-           # continue
-        else:
-            print('xx')
-            phi = (p-1)*(q-1)
 
-            if utils.gcd(e, phi) == 1:
-                print(f"{n} bit prime 1st is: {p}\n prime 2nd is: {q}")
-                break
-            else:
-                continue
+c = utils.modPow(msg, e, n)
+m = utils.modPow(c, d, n)
 
-_n = p*q
-#d = utils.modInverse2(e, phi)
-#print(f'E = {e}, p = {p}, q = {q}, phi = {phi}, n = {_n}, d = {d}\n')
+print("Message data =", msg)
+print("Encrypted data =", c)
+print("Decrypted data =", m)
 
-
-'''
