@@ -1,3 +1,4 @@
+from cgitb import reset
 import random
 
 # Pre generated primes
@@ -32,7 +33,37 @@ def modPow(x, pow, mod) :
          
     return res
 
-def generatePQ(n: int):
+
+def generateG(p: int):
+    assert type(p) is int
+    fact = []
+    phi = p-1
+    n = phi
+    i = 2
+    while i*i<n:
+        if n % i == 0:
+            fact.append(i)
+            while n%i==0:
+                n /= i
+        i += 1
+
+    if n > 1:
+        fact.append(n)
+ 
+    res = 2
+    while res<=p:
+        ok = True
+        j = 0
+        while j<len(fact) and ok:
+            ok = power_mod(int(res), int(phi / fact[j]), int(p)) != 1
+            j += 1
+        if ok:
+            return res
+        res += 1
+
+    return -1
+    
+def generateP(n: int):
     p = 0
     q = 0
 
@@ -42,6 +73,7 @@ def generatePQ(n: int):
             continue
         else:
             break
+    return p
 
     while True:
         q = getLowLevelPrime(n)
