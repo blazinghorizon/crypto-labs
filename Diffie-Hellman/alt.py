@@ -1,22 +1,36 @@
 # 1.2 lab
 
 import utils
+import random
 
-BITS = 1000
+BITS = 10
 
 print('Alice calculates a, g, p and A...')
 
-p = utils.generateP(BITS)
+p = 0
+q = 0
+n = 0
+#p = utils.generateP(BITS)
 while True:
-    try:
-        # https://e-maxx.ru/algo/primitive_root
-        g = utils.generateG(p)
-    except:
+    q = utils.generateP(BITS)
+    n = random.randrange(2, BITS**BITS - 1)
+    if n % 2 == 1:
+        n += 1
+    p = n * q + 1
+
+    if not utils.isMillerRabinPassed(p, 25):
         continue
     else:
         break
 
-a = utils.generateP(BITS)
+while True:
+    a = random.randrange(2, p - 1)
+    g = utils.modPow(a, n, p)
+    if g == 1:
+        continue
+    else:
+        break
+
 _a = utils.modPow(g, a, p)
 
 print(f'Alice sends Bob p = {p}, g = {g} and A = {_a};')
